@@ -51,8 +51,7 @@ describe('reducer', () => {
 
     beforeAll(() => {
         setTimeout.mockImplementation(() => expected_number as unknown as NodeJS.Timeout);
-        clearTimeout.mockImplementation(() => {
-        });
+        clearTimeout.mockImplementation(() => {});
     });
 
     it('handles state transformations for the app', () => {
@@ -119,8 +118,9 @@ describe('reducer', () => {
         dispatch.mockClear();
 
         // cells
-        reducer(state, {type: 'cells', cells: new Set(['0,0'])}, dispatch);
-        expect(state.cells.alive.size).toBeGreaterThan(0);
+        const s = new Set(['0,0'])
+        reducer(state, {type: 'cells', cells: s}, dispatch);
+        expect(state.cells.alive).toEqual(s);
 
         // generate
         reducer({
@@ -144,13 +144,13 @@ describe('reducer', () => {
         expect(post_generation_state.generation).toBe(1);
 
         // dimensions
-        const post_dimensions_state = reducer(state, {
+        const {dimensions: {height, width}} = reducer(state, {
             type: 'dimensions',
             height: state.zoom,
             width: state.zoom,
         }, dispatch);
-        expect(post_dimensions_state.dimensions.height).toEqual(1);
-        expect(post_dimensions_state.dimensions.width).toEqual(1);
+        expect(height).toEqual(1);
+        expect(width).toEqual(1);
         expect(requestAnimationFrame).toHaveBeenCalled();
         const init_fn = requestAnimationFrame.mock.calls[0][0];
         init_fn();
