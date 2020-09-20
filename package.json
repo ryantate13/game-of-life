@@ -1,7 +1,8 @@
 {
-  "name": "life",
+  "name": "game-of-life",
   "version": "0.1.0",
   "private": true,
+  "repository": "https://github.com/ryantate13/game-of-life",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.2",
@@ -10,11 +11,14 @@
     "@types/node": "^14.6.4",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
+    "canvas": "^2.6.1",
+    "jest-canvas-mock": "^2.2.0",
     "node-sass": "^4.14.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "typescript-plugin-css-modules": "^2.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -37,9 +41,12 @@
       "last 1 safari version"
     ]
   },
-  "devDependencies": {
-    "canvas": "^2.6.1",
-    "jest-canvas-mock": "^2.2.0",
-    "typescript-plugin-css-modules": "^2.4.0"
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!/node_modules/",
+      "!src/*.d.ts",
+      "!src/serviceWorker.ts"
+    ]
   }
 }

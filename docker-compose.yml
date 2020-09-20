@@ -1,0 +1,15 @@
+version: '3'
+services:
+  app:
+    build: .
+    volumes:
+      - ./src:/app/src:cached
+      - ./public:/app/public:cached
+    ports:
+      - 3000:3000
+  test:
+    build: .
+    command: npm test -- --coverage --colors --watchAll
+    volumes:
+      - ./src:/app/src:cached
+      - ./public:/app/public:cached
