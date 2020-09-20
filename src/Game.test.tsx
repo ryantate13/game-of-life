@@ -1,12 +1,33 @@
 import React from 'react';
 import {render} from '@testing-library/react';
-import {GLIDER, to_xy, neighbors, generation, Game, dispatch_dimensions, draw_canvas} from './Game';
+import {GLIDER, init, to_xy, neighbors, generation, Game, dispatch_dimensions, draw_canvas} from './Game';
 import {Cells} from './App';
 
 describe('GLIDER', () => {
     it('represents a glider pattern placed in the middle of 25x25 cell universe', () => {
         expect(GLIDER.length).toBe(25);
         expect(GLIDER.every(row => row.length === 25)).toBe(true);
+    });
+});
+
+describe('init', () => {
+    it('creates an initial board for the game comprised of centered gliders in 25x25 cell regions', () => {
+        const new_board = init({height: 25, width: 25});
+        for(const coordinate of new_board){
+            const [x, y] = to_xy(coordinate);
+            expect(GLIDER[y][x]).toBeTruthy();
+        }
+    });
+    it('creates multiple gliders in 25x25 regions if the board size is larger than 25x25', () => {
+        const number_of_coordinates_in_glider = GLIDER
+            .reduce((a, b) => a+b)
+            .split('')
+            .filter(c => c.trim())
+            .length;
+        for(const multiplier of [2, 3, 4, 5]){
+            const board = init({height: 25 * multiplier, width: 25 * multiplier});
+            expect(board.size).toEqual(number_of_coordinates_in_glider * multiplier ** 2);
+        }
     });
 });
 

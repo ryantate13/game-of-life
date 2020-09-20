@@ -4,7 +4,7 @@ import {render} from '@testing-library/react';
 import {App, initial_state, reducer, AppState, Event} from './App';
 import {useDispatch, Reducer} from './useDispatch';
 import {Header} from './Header';
-import {Game, generation} from './Game';
+import {Game, generation, init} from './Game';
 
 jest.mock('./useDispatch', () => ({
     //@ts-expect-error
@@ -21,6 +21,7 @@ jest.mock('./Game', () => ({
         alive: new Set(['0,0']),
         dying: new Set(['1,1']),
     })),
+    init: jest.fn(() => new Set(['0,0'])),
 }));
 
 describe('App', () => {
@@ -50,7 +51,8 @@ describe('reducer', () => {
 
     beforeAll(() => {
         setTimeout.mockImplementation(() => expected_number as unknown as NodeJS.Timeout);
-        clearTimeout.mockImplementation(() => {});
+        clearTimeout.mockImplementation(() => {
+        });
     });
 
     it('handles state transformations for the app', () => {
@@ -89,7 +91,7 @@ describe('reducer', () => {
             dimensions: {
                 width: 1000,
                 height: 1000,
-            }
+            },
         }, {type: 'random'}, dispatch);
         expect(state.cells.alive.size).toEqual(0);
         expect(state.cells.dying.size).toEqual(0);
@@ -105,7 +107,7 @@ describe('reducer', () => {
             dimensions: {
                 width: 10,
                 height: 10,
-            }
+            },
         }, {type: 'random'}, dispatch);
         scheduled_dispatch = requestAnimationFrame.mock.calls[0][0];
         scheduled_dispatch();
@@ -126,7 +128,7 @@ describe('reducer', () => {
             cells: {
                 alive: new Set(),
                 dying: new Set(),
-            }
+            },
         }, {type: 'generate'}, dispatch);
         expect(generation).not.toHaveBeenCalled();
         const post_generation_state = reducer({
@@ -134,7 +136,7 @@ describe('reducer', () => {
             cells: {
                 alive: new Set(['0,0']),
                 dying: new Set(),
-            }
+            },
         }, {type: 'generate'}, dispatch);
         expect(generation).toHaveBeenCalled();
         expect(post_generation_state.cells.alive.size).toBe(1);
@@ -145,10 +147,15 @@ describe('reducer', () => {
         const post_dimensions_state = reducer(state, {
             type: 'dimensions',
             height: state.zoom,
-            width: state.zoom
+            width: state.zoom,
         }, dispatch);
         expect(post_dimensions_state.dimensions.height).toEqual(1);
         expect(post_dimensions_state.dimensions.width).toEqual(1);
+        expect(requestAnimationFrame).toHaveBeenCalled();
+        const init_fn = requestAnimationFrame.mock.calls[0][0];
+        init_fn();
+        expect(init).toHaveBeenCalled();
+        requestAnimationFrame.mockClear();
 
         // we should never arrive at this state
         //@ts-expect-error

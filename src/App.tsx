@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './App.module.scss';
 import {useDispatch, Dispatcher} from './useDispatch';
 import {Header} from './Header';
-import {Game, generation} from './Game';
+import {Game, generation, init} from './Game';
 
 type FPS = {
     type: 'frames_per_second';
@@ -133,6 +133,7 @@ export function reducer(state: AppState, event: Event, dispatch: Dispatcher<Even
         case 'dimensions':
             state.dimensions.height = Math.floor(event.height / state.zoom);
             state.dimensions.width = Math.floor(event.width / state.zoom);
+            requestAnimationFrame(() => dispatch({type: 'cells', cells: init(state.dimensions)}));
             break;
         default:
             console.error('unmatched event type', {event, state});

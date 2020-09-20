@@ -3,10 +3,6 @@ import styles from './Game.module.scss';
 import {Event, Cells, Dimensions, Coordinates} from './App';
 import {Dispatcher} from './useDispatch';
 
-/**
- * TODO
- * Write a function that renders this glider onto a board of arbitrary size
- */
 export const GLIDER: string[] = [
     '                         ',
     '                         ',
@@ -34,6 +30,17 @@ export const GLIDER: string[] = [
     '                         ',
     '                         ',
 ];
+
+export function init({width, height}: Dimensions): Set<Coordinates> {
+    const coordinates = new Set<Coordinates>(),
+        max_y = GLIDER.length,
+        max_x = GLIDER[0].length;
+    for(let y = 0; y < height; ++y)
+        for(let x = 0; x < width; ++x)
+            if(GLIDER[y % max_y][x % max_x].trim())
+                coordinates.add([x,y].toString());
+    return coordinates;
+}
 
 type Props = {
     dispatch: Dispatcher<Event>;
