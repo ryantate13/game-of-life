@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "repository": "https://github.com/ryantate13/game-of-life",
+  "homepage": "https://ryantate13.github.io/game-of-life/",
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.0.2",
